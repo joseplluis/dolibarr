@@ -156,6 +156,11 @@ class pdf_vinci extends ModelePDFMo
 		// Load translation files required by the page
 		$outputlangs->loadLangs(array("main", "orders", "companies", "bills", "dict", "products"));
 
+		// Show Draft Watermark
+		if ($object->statut == $object::STATUS_DRAFT && (getDolGlobalString('MRP_MO_DRAFT_WATERMARK'))) {
+			$this->watermark = $conf->global->MRP_MO_DRAFT_WATERMARK;
+		}
+
 		global $outputlangsbis;
 		$outputlangsbis = null;
 		if (getDolGlobalString('PDF_USE_ALSO_LANGUAGE_CODE') && $outputlangs->defaultlang != getDolGlobalString('PDF_USE_ALSO_LANGUAGE_CODE')) {
@@ -1014,11 +1019,6 @@ class pdf_vinci extends ModelePDFMo
 		// Do not add the BACKGROUND as this is for suppliers
 		//pdf_pagehead($pdf,$outputlangs,$this->page_hauteur);
 
-		//Affiche le filigrane brouillon - Print Draft Watermark
-		/*if($object->statut==0 && getDolGlobalString('COMMANDE_DRAFT_WATERMARK'))
-		{
-			pdf_watermark($pdf,$outputlangs,$this->page_hauteur,$this->page_largeur,'mm',getDolGlobalString('COMMANDE_DRAFT_WATERMARK'));
-		}*/
 		//Print content
 
 		$pdf->SetTextColor(0, 0, 60);
@@ -1295,7 +1295,7 @@ class pdf_vinci extends ModelePDFMo
 	protected function _pagefoot(&$pdf, $object, $outputlangs, $hidefreetext = 0)
 	{
 		$showdetails = getDolGlobalInt('MAIN_GENERATE_DOCUMENTS_SHOW_FOOT_DETAILS', 0);
-		return pdf_pagefoot($pdf, $outputlangs, 'SUPPLIER_ORDER_FREE_TEXT', $this->emetteur, $this->marge_basse, $this->marge_gauche, $this->page_hauteur, $object, $showdetails, $hidefreetext);
+		return pdf_pagefoot($pdf, $outputlangs, 'MRP_MO_FREE_TEXT', $this->emetteur, $this->marge_basse, $this->marge_gauche, $this->page_hauteur, $object, $showdetails, $hidefreetext);
 	}
 
 
